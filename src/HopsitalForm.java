@@ -19,15 +19,27 @@ public class HopsitalForm extends JFrame {
         setResizable(false);
         setLocationRelativeTo(null);
 
+        JPanel mainPanel = new JPanel(new BorderLayout());
+        mainPanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
+        Font labelFont = new Font("Segoe UI", Font.PLAIN, 13);
+
+        JLabel title1 = new JLabel();
+        title1.setFont(new Font("Segoe UI", Font.BOLD, 18));
+        title1.setHorizontalAlignment(SwingConstants.CENTER);
+
+        mainPanel.add(title1, BorderLayout.NORTH);
+
         JPanel formPanel = new JPanel(new GridBagLayout());
 
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(5, 5, 5, 5);
+        gbc.insets = new Insets(8, 8, 8, 8);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
         gbc.gridx = 0;
         gbc.gridy = 0;
-        formPanel.add(new JLabel("Name:"), gbc);
+        JLabel nameLabel = new JLabel("Name:");
+        nameLabel.setFont(labelFont);
+        formPanel.add(nameLabel, gbc);
         nameField = new JTextField(15);
 
         gbc.gridx = 1;
@@ -35,7 +47,9 @@ public class HopsitalForm extends JFrame {
 
         gbc.gridx = 0;
         gbc.gridy = 1;
-        formPanel.add(new JLabel("Age:"), gbc);
+        JLabel ageLabel = new JLabel("Age:");
+        ageLabel.setFont(labelFont);
+        formPanel.add(ageLabel, gbc);
         ageField = new JTextField(5);
 
         gbc.gridx = 1;
@@ -43,7 +57,9 @@ public class HopsitalForm extends JFrame {
 
         gbc.gridx = 0;
         gbc.gridy = 3;
-        formPanel.add(new JLabel("Gender"), gbc);
+        JLabel genderLabel = new JLabel("Gender:");
+        genderLabel.setFont(labelFont);
+        formPanel.add(genderLabel, gbc);
 
         JPanel genderPanel = new JPanel();
         maleButton = new JRadioButton("Male");
@@ -64,13 +80,16 @@ public class HopsitalForm extends JFrame {
 
         gbc.gridx = 0;
         gbc.gridy = 4;
-        formPanel.add(new JLabel("Patient ID:"), gbc);
+        JLabel patientLabel = new JLabel("Patient ID:");
+        patientLabel.setFont(labelFont);
+        formPanel.add(patientLabel, gbc);
         patientIdField = new JTextField(10);
 
         gbc.gridx = 1;
         formPanel.add(patientIdField, gbc);
 
         completedCheckBox = new JCheckBox("Completed");
+        completedCheckBox.setFont(labelFont);
 
         gbc.gridx = 1;
         gbc.gridy = 5;
@@ -84,6 +103,9 @@ public class HopsitalForm extends JFrame {
         exitButton = new JButton("Exit");
         gbc.gridx = 1;
         formPanel.add(exitButton, gbc);
+
+        addButton.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        exitButton.setFont(new Font("Segoe UI", Font.BOLD, 13));
 
         add(formPanel);
 

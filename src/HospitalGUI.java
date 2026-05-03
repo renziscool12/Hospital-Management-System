@@ -16,6 +16,19 @@ public class HospitalGUI extends JFrame {
         setResizable(false);
         setLocationRelativeTo(null);
 
+        table.setRowHeight(25);
+        table.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        table.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 14));
+        table.setSelectionBackground(new Color(174, 214, 241));
+
+        Color bg = new Color(245, 247, 250); // light background
+        Color primary = new Color(52, 152, 219);
+        Color primaryHover = new Color(41, 128, 185);
+        Color danger = new Color(231, 76, 60);
+        Color dangerHover = new Color(192, 57, 43);
+
+        getContentPane().setBackground(bg);
+
         String[] columns = { "ID", "Name", "Age", "Gender", "Complete" };
         model.setColumnIdentifiers(columns);
 
@@ -30,7 +43,7 @@ public class HospitalGUI extends JFrame {
         JPanel panel = new JPanel(new GridBagLayout());
 
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(3, 30, 3, 30);
+        gbc.insets = new Insets(10, 10, 10, 10);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
         JButton addButton = new JButton("Add");
@@ -38,6 +51,19 @@ public class HospitalGUI extends JFrame {
         JButton updateButton = new JButton("Update");
         JButton exitButton = new JButton("Exit");
         JButton searchButton = new JButton("Search");
+
+        styleButton(addButton, primary);
+        styleButton(updateButton, primary);
+        styleButton(deleteButton, danger);
+        styleButton(exitButton, Color.GRAY);
+        styleButton(searchButton, primary);
+
+        applyHover(addButton, primary, primaryHover);
+        applyHover(updateButton, primary, primaryHover);
+        applyHover(searchButton, primary, primaryHover);
+
+        applyHover(deleteButton, danger, dangerHover);
+        applyHover(exitButton, Color.GRAY, Color.DARK_GRAY);
 
         gbc.gridx = 0;
         gbc.gridy = 0;
@@ -56,13 +82,29 @@ public class HospitalGUI extends JFrame {
         panel.add(exitButton, gbc);
         add(panel, BorderLayout.SOUTH);
 
-        JPanel topPanel = new JPanel();
+        JPanel northPanel = new JPanel();
+        northPanel.setLayout(new BorderLayout());
+
+        // Title at top
+        JLabel title = new JLabel("Hospital Management System");
+        title.setFont(new Font("Segoe UI", Font.BOLD, 18));
+        title.setBorder(BorderFactory.createEmptyBorder(10, 10, 5, 10));
+
+        // Search panel
+        JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
         searchField = new JTextField(10);
+        searchField.setPreferredSize(new Dimension(120, 25));
 
         topPanel.add(new JLabel("Search ID:"));
         topPanel.add(searchField);
         topPanel.add(searchButton);
-        add(topPanel, BorderLayout.NORTH);
+
+        // Add both into northPanel
+        northPanel.add(title, BorderLayout.NORTH);
+        northPanel.add(topPanel, BorderLayout.SOUTH);
+
+        // Add once to frame
+        add(northPanel, BorderLayout.NORTH);
 
         addButton.addActionListener(e -> {
             new HopsitalForm(this, "Add Patient", null).setVisible(true);
@@ -84,7 +126,6 @@ public class HospitalGUI extends JFrame {
             if (row != -1) {
                 hospital.removePatient(row);
                 refreshTable();
-                model.removeRow(row);
             }
         });
 
@@ -129,6 +170,35 @@ public class HospitalGUI extends JFrame {
             JOptionPane.showMessageDialog(this, "ID not found", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
+    }
+
+    private void styleButton(JButton button, Color color) {
+        button.setBackground(color);
+        button.setForeground(Color.WHITE);
+        button.setFocusPainted(false);
+        button.setBorderPainted(false);
+        button.setFont(new Font("Segoe UI", Font.BOLD, 12));
+    }
+
+    private void applyHover(JButton button, Color normal, Color hover) {
+        button.setBackground(normal);
+        button.setForeground(Color.WHITE);
+        button.setFocusPainted(false);
+        button.setBorderPainted(false);
+        button.setContentAreaFilled(true);
+        button.setOpaque(true);
+        button.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        button.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+        button.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent e) {
+                button.setBackground(hover);
+            }
+
+            public void mouseExited(java.awt.event.MouseEvent e) {
+                button.setBackground(normal);
+            }
+        });
     }
 
     public HospitalSystem getHospital() {
