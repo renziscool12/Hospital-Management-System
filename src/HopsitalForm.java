@@ -8,16 +8,20 @@ public class HopsitalForm extends JFrame {
     private HospitalGUI mainGui;
     private Patient patient;
     private JCheckBox completedCheckBox;
+    private HospitalSystem hospital;
 
     public HopsitalForm(HospitalGUI mainGui, String title, Patient patient) {
         this.mainGui = mainGui;
         this.patient = patient;
+
+        ImageIcon icon = new ImageIcon("image/hospital.png");
 
         setTitle(title);
         setSize(400, 300);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setResizable(false);
         setLocationRelativeTo(null);
+        setIconImage(icon.getImage());
 
         JPanel mainPanel = new JPanel(new BorderLayout());
         mainPanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
@@ -133,6 +137,24 @@ public class HopsitalForm extends JFrame {
             String patientIdText = patientIdField.getText();
             boolean completed = completedCheckBox.isSelected();
 
+            if (name.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Name cannot be empty", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            for (Patient p : mainGui.getHospital().getAllPatients()) {
+
+                if (!p.getPatientName().equals(patient.getPatientName()) && p.getPatientName().equals(name)) {
+                    JOptionPane.showMessageDialog(this, "Duplicate Name", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                if (!p.getPatientId().equals(patient.getPatientId()) && p.getPatientId().equals(patientIdText)) {
+                    JOptionPane.showMessageDialog(this, "Duplicate Patient ID", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+            }
+
             int age;
             int patientId;
             try {
@@ -157,15 +179,26 @@ public class HopsitalForm extends JFrame {
                 Patient p = new Patient(name, age, gender, patientIdText);
                 p.setCompleted(completedCheckBox.isSelected());
                 mainGui.getHospital().addPatient(p);
+                mainGui.getHospital().saveToFile("patients.txt");
             } else {
                 patient.setPatientName(name);
                 patient.setPatientAge(age);
                 patient.setPatientGender(gender);
                 patient.setPatientId(patientIdText);
                 patient.setCompleted(completed);
+                mainGui.getHospital().saveToFile("patients.txt");
             }
+
             mainGui.refreshTable();
             dispose();
+        });
+
+        exitButton.addActionListener(e -> {
+            int confirm = JOptionPane.showConfirmDialog(this, "Are you sure you to exit?", "Exit Confirmation",
+                    JOptionPane.YES_NO_OPTION);
+            if (confirm == JOptionPane.YES_OPTION) {
+                dispose();
+            }
         });
     }
 }

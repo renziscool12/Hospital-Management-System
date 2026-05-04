@@ -4,22 +4,26 @@ import java.awt.*;
 
 public class HospitalGUI extends JFrame {
 
-    HospitalSystem hospital = new HospitalSystem();
+    private HospitalSystem hospital;
     DefaultTableModel model = new DefaultTableModel();
     JTable table = new JTable(model);
     JTextField searchField;
 
-    public HospitalGUI() {
+    public HospitalGUI(HospitalSystem hospital) {
         setTitle("Hospital System Management");
         setSize(500, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
         setLocationRelativeTo(null);
+        this.hospital = hospital;
 
         table.setRowHeight(25);
         table.setFont(new Font("Segoe UI", Font.PLAIN, 13));
         table.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 14));
         table.setSelectionBackground(new Color(174, 214, 241));
+
+        ImageIcon icon = new ImageIcon("image/hospital.png");
+        setIconImage(icon.getImage());
 
         Color bg = new Color(245, 247, 250); // light background
         Color primary = new Color(52, 152, 219);
@@ -125,6 +129,7 @@ public class HospitalGUI extends JFrame {
             int row = table.getSelectedRow();
             if (row != -1) {
                 hospital.removePatient(row);
+                hospital.saveToFile("patients.txt");
                 refreshTable();
             }
         });
@@ -206,6 +211,11 @@ public class HospitalGUI extends JFrame {
     }
 
     public static void main(String[] args) {
-        new HospitalGUI().setVisible(true);
+        HospitalSystem hospital = new HospitalSystem();
+        hospital.loadFromFile("patients.txt");
+
+        HospitalGUI gui = new HospitalGUI(hospital);
+        gui.refreshTable();
+        gui.setVisible(true);
     }
 }
