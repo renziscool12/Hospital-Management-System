@@ -144,12 +144,16 @@ public class HopsitalForm extends JFrame {
 
             for (Patient p : mainGui.getHospital().getAllPatients()) {
 
-                if (!p.getPatientName().equals(patient.getPatientName()) && p.getPatientName().equals(name)) {
+                if (patient != null && p.getPatientId().equals(patient.getPatientId())) {
+                    continue;
+                }
+
+                if (p.getPatientName().equalsIgnoreCase(name)) {
                     JOptionPane.showMessageDialog(this, "Duplicate Name", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
 
-                if (!p.getPatientId().equals(patient.getPatientId()) && p.getPatientId().equals(patientIdText)) {
+                if (p.getPatientId().equals(patientIdText)) {
                     JOptionPane.showMessageDialog(this, "Duplicate Patient ID", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
